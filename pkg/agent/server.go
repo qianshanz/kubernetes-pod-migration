@@ -65,7 +65,6 @@ func (s *Server) HealthCheck(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte(hostName))
 }
 
-
 func (s *Server) migratePod(w http.ResponseWriter, req *http.Request) {
 	containerId := req.FormValue("containerId")
 	destHost := req.FormValue("destHost")
@@ -78,7 +77,7 @@ func (s *Server) migratePod(w http.ResponseWriter, req *http.Request) {
 	}
 
 	user := os.Getenv("USER")
-
+	//生成checkpoint 文件   这里应该有节点上的docker 相应的处理
 	err = cli.CheckpointCreate(ctx, containerId, types.CheckpointCreateOptions{"savedState", "/home/" + user + "/checkpoint", false})
 
 	if err != nil {
@@ -86,14 +85,14 @@ func (s *Server) migratePod(w http.ResponseWriter, req *http.Request) {
 	}
 	w.Write([]byte("checkpointed " + destHost + "\n"))
 
-	cmd := exec.Command("sudo", "scp", "-r", "/home/" + user + "/checkpoint", user + "@" + destHost + ":/home/" + user)
+	cmd := exec.Command("sudo", "scp", "-r", "/home/"+user+"/checkpoint", user+"@"+destHost+":/home/"+user)
 	cmd.Run()
 }
 
 func (s *Server) clear(w http.ResponseWriter, req *http.Request) {
 	user := os.Getenv("USER")
-	cmd := exec.Command("sudo", "rm", "-rf", "/home/" + user + "/checkpoint")
+	cmd := exec.Command("sudo", "rm", "-rf", "/home/"+user+"/checkpoint")
 	cmd.Run()
-	cmd = exec.Command("sudo", "rm", "/home/" + user + "/indeed")
+	cmd = exec.Command("sudo", "rm", "/home/"+user+"/indeed")
 	cmd.Run()
 }

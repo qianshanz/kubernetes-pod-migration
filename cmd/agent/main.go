@@ -1,15 +1,13 @@
 package main
 
 import (
-	"../../pkg/agent"
+	"kubernetes-pod-migration/pkg/agent"
 	"log"
 	"os"
 )
 
-
 func main() {
 	server, err := agent.NewServer(&agent.DefaultConfig)
-
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)

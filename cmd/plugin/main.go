@@ -1,8 +1,9 @@
 package main
 
 import (
-	"../../pkg/plugin"
+	"kubernetes-pod-migration/pkg/plugin"
 )
+
 //kubectl plugin checkpoint POD_ID
 func main() {
 	cmd := plugin.NewPluginCmd()
